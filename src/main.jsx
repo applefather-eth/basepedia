@@ -24,6 +24,8 @@ import { wikiPages } from "./content/wiki-pages";
 import "./styles.css";
 
 const API_BASE = "https://api.bankr.bot";
+const APP_NAME = "Basepedia";
+const APP_LOGO = "/basepedia-logo.svg";
 
 function compactUsd(value) {
   if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
@@ -204,9 +206,9 @@ function SearchNav({ theme, onThemeToggle, compact = false }) {
     <nav className={`nav ${compact ? "compact-nav" : ""}`}>
       <a className="brand" href="/" onClick={(event) => { event.preventDefault(); navigateTo("/"); }}>
         <span className="brand-mark">
-          <img src="/bankr-logo.svg" alt="" aria-hidden="true" />
+          <img src={APP_LOGO} alt="" aria-hidden="true" />
         </span>
-        <span>Bankrpedia</span>
+        <span>{APP_NAME}</span>
       </a>
       <div className="nav-actions">
         <a className="nav-link" href="/discover" onClick={(event) => { event.preventDefault(); navigateTo("/discover"); }}>
@@ -232,8 +234,8 @@ function HomePage({ projects, theme, onThemeToggle, query, onQueryChange }) {
       <SearchNav theme={theme} onThemeToggle={onThemeToggle} compact />
 
       <section className="home-search">
-        <img className="home-logo" src="/bankr-logo.svg" alt="" aria-hidden="true" />
-        <h1>Bankrpedia</h1>
+        <img className="home-logo" src={APP_LOGO} alt="" aria-hidden="true" />
+        <h1>{APP_NAME}</h1>
         <p>An agent-curated encyclopedia for every project on Base, powered by Hermes Agent.</p>
 
         <form className="home-search-form" onSubmit={submitSearch}>
@@ -242,7 +244,7 @@ function HomePage({ projects, theme, onThemeToggle, query, onQueryChange }) {
             <input
               value={query}
               onChange={(event) => onQueryChange(event.target.value)}
-              placeholder="Search Bankrpedia"
+              placeholder={`Search ${APP_NAME}`}
               autoFocus
             />
           </label>
@@ -485,9 +487,9 @@ function ProjectDetail({ tokenAddress, fallbackProject, onBack, theme, onThemeTo
           <ThemeToggle theme={theme} onToggle={onThemeToggle} />
           <a className="brand" href="/" onClick={(event) => { event.preventDefault(); navigateTo("/"); }}>
             <span className="brand-mark">
-              <img src="/bankr-logo.svg" alt="" aria-hidden="true" />
+              <img src={APP_LOGO} alt="" aria-hidden="true" />
             </span>
-            <span>Bankrpedia</span>
+            <span>{APP_NAME}</span>
           </a>
         </div>
       </nav>

@@ -1,6 +1,6 @@
-# Bankrpedia API Notes
+# Basepedia API Notes
 
-Bankrpedia currently reads public Bankr data directly from:
+Basepedia currently reads public Bankr data directly from:
 
 ```text
 https://api.bankr.bot
@@ -302,40 +302,45 @@ App usage:
 These are not runtime API calls in the app, but were used to create local public assets:
 
 ```text
-https://bankr.bot/favicon.svg
-https://bankr.bot/pwa-icon-192.png
+public/basepedia-logo.svg
 ```
 
-They were downloaded into:
+The app uses a local 3D-style magnifying glass mark:
 
 ```text
-public/bankr-logo.svg
-public/bankr-icon-192.png
+public/basepedia-logo.svg
 ```
 
-The app serves those locally as `/bankr-logo.svg` and `/bankr-icon-192.png`.
+Older Bankr assets are kept in `public/` only as historical local assets.
 
-## Current Special Case
+## Local Wiki Content
 
-The Gitlawb project route is temporarily overridden to render local Markdown instead of the normal detail API UI:
+Token wiki pages are bundled from local Markdown content:
 
 ```text
-/projects/0x5f980dcfc4c0fa3911554cf5ab288ed0eb13dba3
+src/content/tokens/{slug}/index.md
+src/content/tokens/{slug}/meta.json
 ```
 
-Markdown source copied into the app:
+Current routes include:
 
 ```text
-src/content/gitlawb.md
+/tokens/gitlawb
+/tokens/aeon
+/tokens/openagentmarket
+/tokens/nook
 ```
 
-Original local source:
+Recent local source files copied from:
 
 ```text
-/Users/applefather/Documents/Applefather/Bankr Ecosystem/projects/gitlawb.md
+/Users/applefather/Documents/Applefather/Bankr Ecosystem/projects/gitlawb-basepedia-v2.md
+/Users/applefather/Documents/Applefather/Bankr Ecosystem/projects/aeon-basepedia-v2.md
+/Users/applefather/Documents/Applefather/Bankr Ecosystem/projects/openagentmarket-basepedia-v2.md
+/Users/applefather/Documents/Applefather/Bankr Ecosystem/projects/nookplot.md
 ```
 
-This override does not remove the normal API-based detail UI. Other project routes still use the detail endpoints above.
+This token wiki routing does not remove the normal API-based detail UI. Legacy project routes still use the detail endpoints above.
 
 ## Error Handling
 
