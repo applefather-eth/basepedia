@@ -151,6 +151,7 @@ main {
   border-radius: 999px;
   padding: 8px 13px;
   color: var(--bags-foreground);
+  font-family: "openRunde", Arial, sans-serif;
   font-size: 14px;
   font-weight: 600;
 }
@@ -181,6 +182,9 @@ main {
 }
 
 .theme-toggle {
+  justify-content: center;
+  width: 42px;
+  padding: 8px;
   cursor: pointer;
   color: var(--bags-muted);
 }
@@ -989,6 +993,8 @@ h1 {
 
 .grok-article {
   min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
   color: var(--grok-fg);
 }
 
@@ -1012,13 +1018,6 @@ h1 {
   color: var(--bags-accent);
 }
 
-.grok-kicker span:last-child {
-  border-left: 1px solid var(--grok-border);
-  padding-left: 8px;
-  color: var(--grok-secondary);
-  font-weight: 500;
-}
-
 .grok-article h1 {
   max-width: 980px;
   margin: 0;
@@ -1038,7 +1037,10 @@ h1 {
 }
 
 .grok-content {
+  width: 100%;
   max-width: none;
+  overflow-wrap: break-word;
+  word-break: normal;
   color: var(--grok-fg);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
@@ -1079,11 +1081,13 @@ h1 {
 .grok-content ol,
 .grok-content blockquote,
 .grok-content pre {
+  max-width: 100%;
   margin: 0 0 16px;
 }
 
 .grok-content ul,
 .grok-content ol {
+  overflow-wrap: anywhere;
   padding-left: 24px;
 }
 
@@ -1108,6 +1112,9 @@ h1 {
 }
 
 .grok-content code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   border: 1px solid var(--grok-border);
   border-radius: 7px;
   background: var(--grok-surface);
@@ -1126,6 +1133,9 @@ h1 {
 }
 
 .grok-content pre code {
+  white-space: pre;
+  overflow-wrap: normal;
+  word-break: normal;
   border: 0;
   padding: 0;
 }
@@ -1230,16 +1240,14 @@ h1 {
     padding-bottom: 32px;
   }
 
-  .brand span:last-child {
-    display: none;
-  }
-
   .brand {
     min-height: auto;
     border: 0;
     background: transparent;
     box-shadow: none;
     padding: 0;
+    gap: 8px;
+    font-size: 14px;
   }
 
   .brand-mark {
@@ -1287,6 +1295,22 @@ h1 {
 
   .grok-shell {
     padding-top: 10px;
+  }
+
+  .grok-kicker {
+    display: flex;
+    width: fit-content;
+    max-width: 100%;
+    gap: 7px;
+    padding: 8px 10px;
+    font-size: 11px;
+    line-height: 1.15;
+  }
+
+  .grok-kicker span {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
   }
 
   .grok-article h1 {

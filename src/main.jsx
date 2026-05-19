@@ -180,7 +180,6 @@ function ThemeToggle({ theme, onToggle }) {
   return (
     <button className="theme-toggle" onClick={onToggle} aria-label={`Switch to ${isLight ? "dark" : "light"} mode`}>
       {isLight ? <Moon size={15} /> : <Sun size={15} />}
-      <span>{isLight ? "dark" : "light"}</span>
     </button>
   );
 }
@@ -432,8 +431,7 @@ function TokenWikiPage({ page, theme, onThemeToggle }) {
         <article className="grok-article">
           <div className="grok-kicker" title={exactUpdatedAt}>
             <Sparkles size={14} />
-            <span>Fact-checked by Hermes Agent</span>
-            <span>Last updated {updatedLabel}</span>
+            <span>Hermes Agent · Last updated {updatedLabel}</span>
           </div>
           <h1>{wiki.title}</h1>
           <p className="grok-subtitle">An agent-curated encyclopedia article for {wiki.title} on Base.</p>
