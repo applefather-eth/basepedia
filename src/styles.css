@@ -476,6 +476,94 @@ h1 {
   color: #fecaca;
 }
 
+.missing-page {
+  min-height: 100vh;
+}
+
+.missing-card {
+  width: min(620px, 100%);
+  margin: 38px auto 0;
+  border: 1px solid var(--bags-line);
+  border-radius: 28px;
+  background: var(--bags-card);
+  box-shadow: var(--bags-shadow-inset);
+  padding: 28px;
+}
+
+.missing-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid color-mix(in oklab, var(--bags-accent) 42%, transparent);
+  border-radius: 999px;
+  background: var(--bags-accent-soft);
+  padding: 7px 10px;
+  color: var(--bags-accent);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.missing-card h1 {
+  margin: 16px 0 10px;
+  color: var(--bags-foreground);
+  font-size: clamp(40px, 8vw, 72px);
+  line-height: 0.96;
+}
+
+.missing-card p {
+  max-width: 520px;
+  margin: 0;
+  color: var(--bags-muted);
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.request-form {
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.request-form label {
+  display: grid;
+  gap: 7px;
+}
+
+.request-form label span {
+  color: var(--bags-muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.request-form input,
+.request-form textarea {
+  width: 100%;
+  border: 1px solid var(--bags-line);
+  border-radius: 16px;
+  outline: 0;
+  background: var(--bags-inner);
+  box-shadow: var(--bags-shadow-inset);
+  color: var(--bags-foreground);
+  padding: 14px 15px;
+  resize: vertical;
+}
+
+.request-form input:focus,
+.request-form textarea:focus {
+  border-color: color-mix(in oklab, var(--bags-accent) 50%, var(--bags-line));
+}
+
+.request-form button {
+  min-height: 54px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--bags-accent);
+  color: var(--bags-on-accent);
+  cursor: pointer;
+  font-weight: 900;
+}
+
 .content {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -496,9 +584,78 @@ h1 {
   transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
 }
 
+.project-card-inner {
+  height: 100%;
+  transition: opacity 160ms ease, filter 160ms ease;
+}
+
 .project-card:hover {
   transform: translateY(-1px);
   border-color: color-mix(in oklab, var(--bags-accent) 35%, var(--bags-line));
+}
+
+.project-card.missing-wiki {
+  border-color: color-mix(in oklab, var(--bags-line) 80%, var(--bags-muted));
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--bags-card) 82%, var(--bags-background)) 0%,
+      var(--bags-card) 100%
+    );
+}
+
+.project-card.missing-wiki::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background: color-mix(in oklab, var(--bags-card) 58%, transparent);
+}
+
+.project-card.missing-wiki .project-card-inner {
+  opacity: 0.48;
+  filter: saturate(0.72);
+}
+
+.project-card.missing-wiki:hover .project-card-inner {
+  opacity: 0.62;
+}
+
+.wiki-status {
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  z-index: 2;
+  border: 1px solid color-mix(in oklab, var(--bags-accent) 34%, var(--bags-line));
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--bags-card) 82%, var(--bags-accent));
+  color: var(--bags-accent);
+  padding: 7px 10px;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.request-wiki-button {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 3;
+  min-height: 42px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--bags-accent);
+  color: var(--bags-on-accent);
+  cursor: pointer;
+  padding: 0 16px;
+  box-shadow: 0 8px 18px color-mix(in oklab, var(--bags-accent) 24%, transparent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.request-wiki-button:hover {
+  transform: translateY(-1px);
 }
 
 .rank {

@@ -1,0 +1,46 @@
+name: Project wiki request
+description: Request a new Basepedia wiki page for a Base project or token.
+title: "Request wiki: "
+labels:
+  - wiki-request
+body:
+  - type: input
+    id: project
+    attributes:
+      label: Project or token
+      description: Project name, token symbol, or slug.
+      placeholder: "CLAWD / $CLAWD / clawbank"
+    validations:
+      required: true
+  - type: input
+    id: contract
+    attributes:
+      label: Contract address
+      description: Base token contract if known.
+      placeholder: "0x..."
+  - type: input
+    id: website
+    attributes:
+      label: Website or product link
+      placeholder: "https://..."
+  - type: input
+    id: social
+    attributes:
+      label: Official X or community link
+      placeholder: "https://x.com/..."
+  - type: textarea
+    id: context
+    attributes:
+      label: Useful context
+      description: What should Hermes Agent or a contributor cover?
+      placeholder: "What does it do? Who is it for? Any product, market, or source links?"
+    validations:
+      required: true
+  - type: checkboxes
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      options:
+        - label: Add or update the markdown page in `src/content/tokens/<slug>/index.md`.
+        - label: Add or update `src/content/tokens/<slug>/meta.json`.
+        - label: Verify the page renders at `/tokens/<slug>`.

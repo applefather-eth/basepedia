@@ -26,6 +26,7 @@ import "./styles.css";
 const API_BASE = "https://api.bankr.bot";
 const APP_NAME = "Basepedia";
 const APP_LOGO = "/basepedia-logo.png";
+const WIKI_REQUEST_LABEL = "wiki-request";
 
 function compactUsd(value) {
   if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
@@ -189,15 +190,51 @@ function navigateTo(path) {
   window.dispatchEvent(new PopStateEvent("popstate"));
 }
 
-function tokenWikiPath(project) {
-  const raw = project.tokenSymbol || project.slug || project.projectName || project.tokenAddress;
-  const slug = String(raw ?? "")
+function slugify(value) {
+  return String(value ?? "")
     .replace(/^\$/, "")
     .trim()
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
+}
+
+function tokenWikiSlug(project) {
+  const candidates = [project.tokenSymbol, project.slug, project.projectName, project.tokenAddress].map(slugify).filter(Boolean);
+  return candidates.find((slug) => wikiPages[slug]) ?? candidates[0] ?? "";
+}
+
+function tokenWikiPath(project) {
+  const slug = tokenWikiSlug(project);
   return slug ? `/tokens/${slug}` : "";
+}
+
+function projectRequestIssueUrl({ name, path = window.location.href, notes = "No extra notes yet." }) {
+  const requestName = name?.trim() || "Unknown project";
+  const title = `Request wiki: ${requestName}`;
+  const body = [
+    "## Project wiki request",
+    "",
+    `Token/project: ${requestName}`,
+    `Requested from: ${path}`,
+    `Source: Basepedia request flow`,
+    "",
+    "## Useful context",
+    "",
+    notes.trim() || "No extra notes yet.",
+    "",
+    "## Acceptance criteria",
+    "",
+    "- [ ] Add or update the markdown page in `src/content/tokens/<slug>/index.md`.",
+    "- [ ] Add or update `src/content/tokens/<slug>/meta.json`.",
+    "- [ ] Verify the page renders at `/tokens/<slug>`.",
+  ].join("\n");
+  const params = new URLSearchParams({
+    title,
+    body,
+    labels: WIKI_REQUEST_LABEL,
+  });
+  return `https://github.com/applefather-eth/basepedia/issues/new?${params.toString()}`;
 }
 
 function SearchNav({ theme, onThemeToggle, compact = false }) {
@@ -269,10 +306,30 @@ function ProjectCard({ project, rank }) {
   const change = project.priceChange24h;
   const positive = Number(change) >= 0;
   const tokenPath = tokenWikiPath(project);
+  const wikiSlug = tokenWikiSlug(project);
+  const hasWiki = Boolean(wikiPages[wikiSlug]);
+
+  const requestWiki = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    window.open(
+      projectRequestIssueUrl({
+        name: project.projectName || project.tokenSymbol || wikiSlug,
+        path: `${window.location.origin}${tokenPath || "/discover"}`,
+        notes: [
+          project.tokenSymbol ? `Ticker: $${project.tokenSymbol}` : "",
+          project.tokenAddress ? `Contract: ${project.tokenAddress}` : "",
+          project.website ? `Website: ${project.website}` : "",
+        ].filter(Boolean).join("\n") || "Please create a Basepedia wiki page for this project.",
+      }),
+      "_blank",
+      "noopener,noreferrer",
+    );
+  };
 
   return (
     <article
-      className="project-card"
+      className={`project-card ${hasWiki ? "has-wiki" : "missing-wiki"}`}
       role="link"
       tabIndex={0}
       onClick={() => tokenPath && navigateTo(tokenPath)}
@@ -280,66 +337,74 @@ function ProjectCard({ project, rank }) {
         if ((event.key === "Enter" || event.key === " ") && tokenPath) navigateTo(tokenPath);
       }}
     >
-      <div className="rank">#{rank}</div>
-      <div className="project-top">
-        <ProjectAvatar image={project.image} name={project.projectName} />
-        <div className="project-name">
-          <h2>{project.projectName}</h2>
-          <p>{project.tokenSymbol ? `$${project.tokenSymbol}` : project.slug}</p>
+      <div className="project-card-inner">
+        <div className="rank">#{rank}</div>
+        {!hasWiki && <div className="wiki-status">Wiki pending</div>}
+        <div className="project-top">
+          <ProjectAvatar image={project.image} name={project.projectName} />
+          <div className="project-name">
+            <h2>{project.projectName}</h2>
+            <p>{project.tokenSymbol ? `$${project.tokenSymbol}` : project.slug}</p>
+          </div>
+        </div>
+
+        <p className="description">{project.description || "No public description yet."}</p>
+
+        <div className="metrics">
+          <div>
+            <span>Market cap</span>
+            <strong>{compactUsd(project.marketCapUsd)}</strong>
+          </div>
+          <div>
+            <span>24h volume</span>
+            <strong>{compactUsd(project.volume24h)}</strong>
+          </div>
+          <div>
+            <span>24h</span>
+            <strong className={positive ? "positive" : "negative"}>
+              {positive ? <ArrowUpRight size={15} /> : <ArrowDownRight size={15} />}
+              {formatPercent(change)}
+            </strong>
+          </div>
+        </div>
+
+        <div className="card-footer">
+          <div className="revenue">
+            <span>7d revenue</span>
+            <strong>{project.weeklyRevenueWeth ? `${Number(project.weeklyRevenueWeth).toFixed(3)} WETH` : "-"}</strong>
+          </div>
+          <div className="links">
+            {project.twitterUsername && (
+              <a href={`https://x.com/${project.twitterUsername}`} target="_blank" rel="noreferrer" aria-label="Open X profile" onClick={(event) => event.stopPropagation()}>
+                <Twitter size={17} />
+              </a>
+            )}
+            {project.website && (
+              <a href={project.website} target="_blank" rel="noreferrer" aria-label="Open website" onClick={(event) => event.stopPropagation()}>
+                <Globe2 size={17} />
+              </a>
+            )}
+            {tokenPath && (
+              <a
+                href={tokenPath}
+                aria-label={hasWiki ? "Open token wiki" : "Open wiki request page"}
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  navigateTo(tokenPath);
+                }}
+              >
+                <ExternalLink size={17} />
+              </a>
+            )}
+          </div>
         </div>
       </div>
-
-      <p className="description">{project.description || "No public description yet."}</p>
-
-      <div className="metrics">
-        <div>
-          <span>Market cap</span>
-          <strong>{compactUsd(project.marketCapUsd)}</strong>
-        </div>
-        <div>
-          <span>24h volume</span>
-          <strong>{compactUsd(project.volume24h)}</strong>
-        </div>
-        <div>
-          <span>24h</span>
-          <strong className={positive ? "positive" : "negative"}>
-            {positive ? <ArrowUpRight size={15} /> : <ArrowDownRight size={15} />}
-            {formatPercent(change)}
-          </strong>
-        </div>
-      </div>
-
-      <div className="card-footer">
-        <div className="revenue">
-          <span>7d revenue</span>
-          <strong>{project.weeklyRevenueWeth ? `${Number(project.weeklyRevenueWeth).toFixed(3)} WETH` : "-"}</strong>
-        </div>
-        <div className="links">
-          {project.twitterUsername && (
-            <a href={`https://x.com/${project.twitterUsername}`} target="_blank" rel="noreferrer" aria-label="Open X profile" onClick={(event) => event.stopPropagation()}>
-              <Twitter size={17} />
-            </a>
-          )}
-          {project.website && (
-            <a href={project.website} target="_blank" rel="noreferrer" aria-label="Open website" onClick={(event) => event.stopPropagation()}>
-              <Globe2 size={17} />
-            </a>
-          )}
-          {tokenPath && (
-            <a
-              href={tokenPath}
-              aria-label="Open token wiki"
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                navigateTo(tokenPath);
-              }}
-            >
-              <ExternalLink size={17} />
-            </a>
-          )}
-        </div>
-      </div>
+      {!hasWiki && (
+        <button className="request-wiki-button" type="button" onClick={requestWiki}>
+          Request wiki
+        </button>
+      )}
     </article>
   );
 }
@@ -438,6 +503,57 @@ function TokenWikiPage({ page, theme, onThemeToggle }) {
 
           <div className="grok-content" dangerouslySetInnerHTML={{ __html: wiki.html }} />
         </article>
+      </section>
+    </main>
+  );
+}
+
+function MissingWikiPage({ tokenSlug, theme, onThemeToggle }) {
+  const [requestName, setRequestName] = useState(tokenSlug);
+  const [context, setContext] = useState("");
+
+  const submitRequest = (event) => {
+    event.preventDefault();
+    window.open(
+      projectRequestIssueUrl({
+        name: requestName.trim() || tokenSlug,
+        path: window.location.href,
+        notes: context.trim() || "No extra notes yet.",
+      }),
+      "_blank",
+      "noopener,noreferrer",
+    );
+  };
+
+  return (
+    <main className="missing-page">
+      <SearchNav theme={theme} onThemeToggle={onThemeToggle} compact />
+      <section className="missing-card">
+        <div className="missing-label">
+          <Sparkles size={14} />
+          <span>Wiki not found</span>
+        </div>
+        <h1>{tokenSlug}</h1>
+        <p>
+          This project does not have a Basepedia page yet. Request one and it can be picked up by Hermes Agent or an
+          open-source contributor.
+        </p>
+        <form className="request-form" onSubmit={submitRequest}>
+          <label>
+            <span>Project or token</span>
+            <input value={requestName} onChange={(event) => setRequestName(event.target.value)} />
+          </label>
+          <label>
+            <span>Useful context</span>
+            <textarea
+              value={context}
+              onChange={(event) => setContext(event.target.value)}
+              placeholder="Website, X handle, contract, or what you want covered..."
+              rows={4}
+            />
+          </label>
+          <button type="submit">Submit request</button>
+        </form>
       </section>
     </main>
   );
@@ -690,10 +806,11 @@ function App() {
     }
 
     return (
-      <main>
-        <SearchNav theme={theme} onThemeToggle={() => setTheme((current) => current === "light" ? "dark" : "light")} compact />
-        <div className="notice">No wiki page found for {tokenSlug}.</div>
-      </main>
+      <MissingWikiPage
+        tokenSlug={tokenSlug}
+        theme={theme}
+        onThemeToggle={() => setTheme((current) => current === "light" ? "dark" : "light")}
+      />
     );
   }
 
