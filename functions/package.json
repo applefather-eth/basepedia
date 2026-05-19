@@ -1,0 +1,20 @@
+{
+  "name": "functions",
+  "version": "1.0.0",
+  "description": "Dynamic Basepedia meta and OG image functions.",
+  "main": "index.js",
+  "scripts": {
+    "start": "firebase emulators:start --only functions,hosting",
+    "test": "node -c index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "firebase-admin": "^13.10.0",
+    "firebase-functions": "^7.2.5",
+    "satori": "^0.26.0"
+  }
+}

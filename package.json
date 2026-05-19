@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && npm run sync:functions-assets",
+    "build:web": "vite build",
+    "sync:functions-assets": "node scripts/sync-functions-assets.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

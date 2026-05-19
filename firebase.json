@@ -1,8 +1,21 @@
 {
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs22",
+    "predeploy": ["npm run build"]
+  },
   "hosting": {
     "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
+      {
+        "source": "/api/og/**",
+        "function": "ogImage"
+      },
+      {
+        "source": "/tokens/**",
+        "function": "tokenPage"
+      },
       {
         "source": "**",
         "destination": "/index.html"
