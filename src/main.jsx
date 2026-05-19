@@ -25,7 +25,7 @@ import "./styles.css";
 
 const API_BASE = "https://api.bankr.bot";
 const APP_NAME = "Basepedia";
-const APP_LOGO = "/basepedia-logo.svg";
+const APP_LOGO = "/basepedia-logo.png";
 
 function compactUsd(value) {
   if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";

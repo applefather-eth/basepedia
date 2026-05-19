@@ -302,13 +302,13 @@ App usage:
 These are not runtime API calls in the app, but were used to create local public assets:
 
 ```text
-public/basepedia-logo.svg
+public/basepedia-logo.png
 ```
 
 The app uses a local 3D-style magnifying glass mark:
 
 ```text
-public/basepedia-logo.svg
+public/basepedia-logo.png
 ```
 
 Older Bankr assets are kept in `public/` only as historical local assets.
